@@ -17,7 +17,7 @@ class Build(models.Model):
         ('running', 'running'),
         ('stopped', 'stopped'),
         ('passed', 'passed'),
-        ('errored', 'errored'),
+        ('failed', 'failed'),
     )
 
     repo = models.ForeignKey(Repo, on_delete=models.CASCADE)

@@ -1,7 +1,7 @@
 from subprocess import call
 from os import chdir
 from simpleci.settings import BASE_DIR
-from front.models import Pipeline
+from front.models import Build, Pipeline
 
 def install(source):
     call(['mkdir', '-p', '.repos'])
@@ -9,13 +9,21 @@ def install(source):
     call(['git', 'clone', source])
     chdir(BASE_DIR)
 
-def build(repo, branch):
+def build(build_id):
+    build = Build.objects.get(id=build_id)
+    repo = build.repo.name
+    branch = build.branch
+
     if not __is_installed(repo):
-        return "Please clone repo before building"
+        return 'Please clone repo before building'
 
     try:
+        __update_status(build, 'running')
         __setup(repo, branch)
         __run(repo, branch)
+        __update_status(build, 'passed')
+    except:
+        __update_status(build, 'failed')
     finally:
         __cleanup()
 
@@ -48,3 +56,7 @@ def __get_pipeline(repo, branch):
     pipeline = pipelines[0] if len(pipelines) > 0 else Pipeline.objects.get(repo__name=repo, name='default')
 
     return pipeline.get_commands()
+
+def __update_status(build, status):
+    build.status = status
+    build.save()
