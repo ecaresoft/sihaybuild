@@ -26,3 +26,6 @@ class Pipeline(models.Model):
     name = models.CharField(max_length=50)
     branch_pattern = models.CharField(max_length=50)
     commands = models.TextField()
+
+    def get_commands(self):
+        return self.commands.split('\n')
