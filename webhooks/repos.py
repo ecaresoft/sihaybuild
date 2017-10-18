@@ -1,7 +1,8 @@
-from subprocess import call
+from subprocess import call, check_output, CalledProcessError
 from os import chdir
 from simpleci.settings import BASE_DIR
 from front.models import Build, Pipeline
+from json import dumps
 
 def install(source):
     call(['mkdir', '-p', '.repos'])
@@ -17,15 +18,18 @@ def build(build_id):
     if not __is_installed(repo):
         return 'Please clone repo before building'
 
-    try:
-        __update_status(build, 'running')
-        __setup(repo, branch)
-        __run(repo, branch)
+    __update_status(build, 'running')
+    __setup(repo, branch)
+
+    errored, log = __run(repo, branch)
+    build.log = dumps(log)
+
+    if not errored:
         __update_status(build, 'passed')
-    except:
+    else:
         __update_status(build, 'failed')
-    finally:
-        __cleanup()
+
+    __cleanup()
 
 def __is_installed(repo):
     return call(['test', '-d', ".repos/%s" % repo]) == 0
@@ -38,10 +42,26 @@ def __setup(repo, branch):
 
 def __run(repo, branch):
     pipeline = __get_pipeline(repo, branch)
-    status = 0
+    log = []
+    errored = False
 
-    for command in pipeline:
-        status = call(command.split(' '))
+    try:
+        for command in pipeline:
+            output = check_output(command.split(' '))
+            log.append({
+                'status': 0,
+                'output': output,
+                'command': command
+            })
+    except CalledProcessError as e:
+        log.append({
+            'status': e.returncode,
+            'output': e.output,
+            'command': e.cmd
+        })
+        errored = True
+
+    return [errored, log]
 
 def __cleanup():
     call(['git', 'checkout', '--', '.'])
