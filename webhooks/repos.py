@@ -3,6 +3,7 @@ from os import chdir
 from simpleci.settings import BASE_DIR
 from front.models import Build, Pipeline
 from json import dumps
+from webhooks.slack import build_passed, build_failed
 
 def install(source):
     call(['mkdir', '-p', '.repos'])
@@ -26,8 +27,10 @@ def build(build_id):
 
     if not errored:
         __update_status(build, 'passed')
+        build_passed(build)
     else:
         __update_status(build, 'failed')
+        build_failed(build, log[-1]['command'])
 
     __cleanup()
 
