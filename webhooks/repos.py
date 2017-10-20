@@ -5,10 +5,19 @@ from front.models import Build, Pipeline
 from json import dumps
 from webhooks.slack import build_passed, build_failed
 
-def install(source):
+def install(repo):
     call(['mkdir', '-p', '.repos'])
     chdir('.repos')
-    call(['git', 'clone', source])
+    call(['git', 'clone', repo.source])
+
+    additional_setup = repo.get_commands()
+
+    if additional_setup:
+        chdir(repo.name)
+
+        for command in additional_setup:
+            __run_cmd(command)
+
     chdir(BASE_DIR)
 
 def build(build_id):

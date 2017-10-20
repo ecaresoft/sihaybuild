@@ -7,8 +7,16 @@ from .utils import yaml_load
 @python_2_unicode_compatible
 class Repo(models.Model):
     name = models.CharField(max_length=50)
+    source = models.CharField(max_length=100)
+    additional_setup = models.TextField(null=True, blank=True)
     slack_channel = models.CharField(max_length=20, null=True, blank=True)
     slack_token = models.CharField(max_length=100, null=True, blank=True)
+
+    def get_commands(self):
+        if self.additional_setup:
+            return self.additional_setup.split('\n')
+        else:
+            None
 
     def __str__(self):
         return self.name
