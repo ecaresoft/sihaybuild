@@ -22,15 +22,15 @@ def build(build_id):
     __update_status(build, 'running')
     __setup(repo, branch)
 
-    errored, log = __run(repo, branch)
+    build_error, log = __run(repo, branch)
     build.log = dumps(log)
 
-    if not errored:
+    if not build_error:
         __update_status(build, 'passed')
         build_passed(build)
     else:
         __update_status(build, 'failed')
-        build_failed(build, log[-1]['command'])
+        build_failed(build, log[-1]['log'][-1]['command'])
 
     __cleanup()
 
@@ -45,26 +45,38 @@ def __setup(repo, branch):
 
 def __run(repo, branch):
     pipeline = __get_pipeline(repo, branch)
-    log = []
-    errored = False
+    full_log = []
+    cmd_error = False
+
+    for stage, commands in pipeline.items():
+        stage_log = []
+
+        for command in commands:
+            log = __run_cmd(command)
+            stage_log.append(log)
+
+            if log['status'] != 0:
+                cmd_error = True
+                break
+
+        full_log.append({ 'stage': stage, 'log': stage_log })
+
+        if cmd_error:
+            break
+
+    return [cmd_error, full_log]
+
+def __run_cmd(command):
+    status = 0
+    output = None
 
     try:
-        for command in pipeline:
-            output = check_output(command.split(' '))
-            log.append({
-                'status': 0,
-                'output': output,
-                'command': command
-            })
+        output = check_output(command.split(' '))
     except CalledProcessError as e:
-        log.append({
-            'status': e.returncode,
-            'output': e.output,
-            'command': e.cmd
-        })
-        errored = True
+        status = e.returncode
+        output = e.output
 
-    return [errored, log]
+    return { 'status': status, 'output': output, 'command': command }
 
 def __cleanup():
     call(['git', 'checkout', '--', '.'])

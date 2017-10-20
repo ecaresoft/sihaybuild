@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from .utils import yaml_load
 
 @python_2_unicode_compatible
 class Repo(models.Model):
@@ -40,7 +41,7 @@ class Pipeline(models.Model):
     commands = models.TextField()
 
     def get_commands(self):
-        return self.commands.split('\n')
+        return yaml_load(self.commands)
 
     def __str__(self):
         return "%s (%s)" % (self.name, self.repo)
