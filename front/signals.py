@@ -8,3 +8,14 @@ from webhooks import repos
 def clone_repo_before_save(sender, instance, **kwargs):
     if not instance.id:
         repos.install(instance)
+
+@receiver(post_save, sender=Repo)
+def create_default_pipeline(sender, instance, **kwargs):
+    try:
+        Pipeline.objects.get(repo=instance, name='default')
+        pass
+    except ObjectDoesNotExist:
+        default_pipeline = Pipeline(repo=instance, name='default', branch_pattern='*')
+        default_pipeline.save()
+    except:
+        pass
