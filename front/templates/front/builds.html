@@ -1,0 +1,12 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Builds:</h1>
+
+  <ul>
+    {% for build in builds %}
+      <li>
+        {{ build }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

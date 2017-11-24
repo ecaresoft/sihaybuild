@@ -1,0 +1,14 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Build</h1>
+
+  <ul class="list-group">
+    <li class="list-group-item"><b>Repo: </b> {{ build.repo }}</li>
+    <li class="list-group-item"><b>Branch: </b> {{ build.branch }}</li>
+    <li class="list-group-item"><b>Commiter: </b> {{ build.committer }}</li>
+    <li class="list-group-item"><b>Status: </b> {{ build.status }}</li>
+    <li class="list-group-item"><b>Repo: </b> {{ build.log }}</li>
+  </ul>
+
+  <p><a href="{% url 'front:repo_builds' build.repo.id %}">Back to repo</a></p>
+{% endblock %}

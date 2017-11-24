@@ -1,0 +1,12 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Repos:</h1>
+
+  <ul>
+    {% for repo in repos %}
+      <li>
+        <b>{{ repo }}</b> <a href="{% url 'front:repo_builds' repo.id %}">builds</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}

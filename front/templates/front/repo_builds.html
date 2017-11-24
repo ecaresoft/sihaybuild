@@ -1,0 +1,15 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Builds: {{ repo.name }}</h1>
+
+  <ul>
+    {% for build in repo.build_set.all %}
+      <li>
+        {{ build }} -> 
+        <a href="{% url 'front:build' build.id %}">Show</a>
+      </li>
+    {% endfor %}
+  </ul>
+
+  <a href="{% url 'front:repos' %}">Back to repos</a>
+{% endblock %}
