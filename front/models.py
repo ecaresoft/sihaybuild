@@ -39,7 +39,7 @@ class Build(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "%s/%s: %s" % (self.repo.name, self.branch, self.status)
+        return "[%s] %s/%s : %s" % (self.committer, self.repo.name, self.branch, self.status)
 
 @python_2_unicode_compatible
 class Pipeline(models.Model):
