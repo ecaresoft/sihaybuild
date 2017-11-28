@@ -1,0 +1,5 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Reruning build....</h1>
+  <h2><a href="{% url 'front:repo_builds' build.repo_id %}">Back to builds</a></h2>
+{% endblock %}

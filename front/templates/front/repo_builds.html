@@ -5,8 +5,9 @@
   <ul>
     {% for build in repo.build_set.all %}
       <li>
-        {{ build }} -> 
-        <a href="{% url 'front:build' build.id %}">Show</a>
+        {{ build }} ->
+        <a href="{% url 'front:build' build.id %}">Show</a> -->
+        <a href="{% url 'webhooks:rerun' build.id %}">Rerun</a>
       </li>
     {% endfor %}
   </ul>

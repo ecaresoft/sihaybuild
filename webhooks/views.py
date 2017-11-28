@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from webhooks import repos
 from front.models import Repo, Build
@@ -30,6 +30,11 @@ def index(request):
             pass
 
     return JsonResponse({'status': 'ok'})
+
+def rerun(request, build_id):
+    build = get_object_or_404(Build, pk=build_id)
+    repos.build(build.id)
+    return render(request, 'webhooks/rerun.html', {'build': build})
 
 def __parse_payload(event, payload):
     repo = payload['repository']['name'] if 'repository' in payload else None

@@ -29,6 +29,7 @@ def build(build_id):
         return 'Please clone repo before building'
 
     __update_status(build, 'running')
+
     __setup(repo, branch)
 
     build_error, log = __run(repo, branch)
@@ -47,6 +48,7 @@ def __is_installed(repo):
     return call(['test', '-d', ".repos/%s" % repo]) == 0
 
 def __setup(repo, branch):
+    import pdb; pdb.set_trace()
     chdir(".repos/%s" % repo)
     call(['git', 'fetch', '--prune'])
     call(['git', 'checkout', branch])
