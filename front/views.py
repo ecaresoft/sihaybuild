@@ -26,5 +26,6 @@ class ReposView(ListView):
         return Repo.objects.all()
 
 class RepoBuildsView(generic.DetailView):
+    # TODO: use select_related bc: N+1
     model = Repo
     template_name = 'front/repo_builds.html'
