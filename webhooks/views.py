@@ -33,6 +33,8 @@ def index(request):
 
 def rerun(request, build_id):
     build = get_object_or_404(Build, pk=build_id)
+    build.status = 'running'
+    build.save()
     repos.build(build.id)
     return render(request, 'webhooks/rerun.html', {'build': build})
 
