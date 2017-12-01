@@ -4,6 +4,7 @@ from simpleci.settings import BASE_DIR
 from front.models import Build, Pipeline
 from json import dumps
 from webhooks.slack import build_passed, build_failed
+from background_task import background
 
 def install(repo):
     call(['mkdir', '-p', '.repos'])
@@ -20,6 +21,7 @@ def install(repo):
 
     chdir(BASE_DIR)
 
+@background(schedule=15)
 def build(build_id):
     build = Build.objects.get(id=build_id)
     repo = build.repo.name
@@ -48,7 +50,6 @@ def __is_installed(repo):
     return call(['test', '-d', ".repos/%s" % repo]) == 0
 
 def __setup(repo, branch):
-    import pdb; pdb.set_trace()
     chdir(".repos/%s" % repo)
     call(['git', 'fetch', '--prune'])
     call(['git', 'checkout', branch])
