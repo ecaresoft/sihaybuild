@@ -11,9 +11,9 @@ pip install -r requirements.txt
 ```sh
 ./manage.py migrate
 ```
-3. Run server
+3. Run the app with honcho
 ```sh
-./manage.py runserver
+honcho start
 ```
 
 ### Usage
