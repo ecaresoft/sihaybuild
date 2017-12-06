@@ -11,13 +11,13 @@ name = "pypi"
 
 [packages]
 
-Django = "==1.11.6"
+django = "==1.11.6"
 django-background-tasks = "==1.1.12"
 django-environ = "==0.4.4"
 honcho = "==1.0.1"
 slackclient = "==1.0.9"
 "psycopg2" = "==2.7.3.2"
-PyYAML = "==3.12"
+pyyaml = "==3.12"
 
 
 [requires]

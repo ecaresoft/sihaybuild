@@ -5,12 +5,13 @@ A naive CI implementation made in django.
 ### Installation
 1. [Install Pipenv](https://robots.thoughtbot.com/how-to-manage-your-python-projects-with-pipenv)
 ```sh
-pip install pipenv
-pipenv install --two
+sudo pip install pipenv
+sudo pipenv install --two
 pipenv shell
 ```
-2. Run migrations
+2. [Config database](https://tutorial-extensions.djangogirls.org/en/optional_postgresql_installation/) and setup `env` variables
 ```sh
+psql# CREATE DATABASE databasename OWNER name;
 pipenv run manage.py migrate
 ```
 3. Run the app with honcho
