@@ -3,17 +3,19 @@
 A naive CI implementation made in django.
 
 ### Installation
-1. Use pip to install requirements.
+1. [Install Pipenv](https://robots.thoughtbot.com/how-to-manage-your-python-projects-with-pipenv)
 ```sh
-pip install -r requirements.txt
+pip install pipenv
+pipenv install --two
+pipenv shell
 ```
 2. Run migrations
 ```sh
-./manage.py migrate
+pipenv run manage.py migrate
 ```
 3. Run the app with honcho
 ```sh
-honcho start
+pipenv run honcho start
 ```
 
 ### Usage
