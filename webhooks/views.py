@@ -8,6 +8,7 @@ from background_task.models import Task
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from json import loads
+from django.contrib.auth.decorators import login_required
 
 @csrf_exempt
 def index(request):
@@ -32,6 +33,7 @@ def index(request):
 
     return JsonResponse({'status': 'ok'})
 
+@login_required(login_url='/admin/login/')
 def stop(request, build_id):
     build = get_object_or_404(Build, pk=build_id)
     task_params = "[[%s], {}]" %(str(build_id))
@@ -41,6 +43,7 @@ def stop(request, build_id):
     build.save()
     return render(request, 'webhooks/stop.html', {'build': build})
 
+@login_required(login_url='/admin/login/')
 def rerun(request, build_id):
     build = get_object_or_404(Build, pk=build_id)
     build.status = 'running'
