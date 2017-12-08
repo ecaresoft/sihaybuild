@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from webhooks import repos
 from front.models import Repo, Build
+from background_task.models import Task
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import ObjectDoesNotExist
 from json import loads
@@ -30,6 +31,15 @@ def index(request):
             pass
 
     return JsonResponse({'status': 'ok'})
+
+def stop(request, build_id):
+    build = get_object_or_404(Build, pk=build_id)
+    task_params = "[[%s], {}]" %(str(build_id))
+    task = get_object_or_404(Task, task_name='webhooks.repos.build', task_params=task_params)
+    task.delete()
+    build.status = 'stopped'
+    build.save()
+    return render(request, 'webhooks/stop.html', {'build': build})
 
 def rerun(request, build_id):
     build = get_object_or_404(Build, pk=build_id)

@@ -7,7 +7,11 @@
       <li>
         {{ build }} ->
         <a href="{% url 'front:build' build.id %}">Show</a> -->
-        <a href="{% url 'webhooks:rerun' build.id %}">Rerun</a>
+        {% if build.status == 'running' %}
+          <a href="{% url 'webhooks:stop' build.id %}">Stop</a>
+        {% else %}
+          <a href="{% url 'webhooks:rerun' build.id %}">Rerun</a>
+        {% endif %}
       </li>
     {% endfor %}
   </ul>
