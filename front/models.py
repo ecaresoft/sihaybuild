@@ -38,6 +38,9 @@ class Build(models.Model):
     log = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return "[%s] %s/%s : %s" % (self.committer, self.repo.name, self.branch, self.status)
 

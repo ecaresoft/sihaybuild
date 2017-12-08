@@ -1,0 +1,6 @@
+{% extends 'front/base.html' %}
+{% block content %}
+  <h1>Build stopped</h1>
+
+  <a href="{% url 'front:repo_builds' build.repo_id %}">Back to builds</a>
+{% endblock %}
