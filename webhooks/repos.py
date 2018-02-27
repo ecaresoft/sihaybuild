@@ -5,6 +5,8 @@ from front.models import Build, Pipeline
 from json import dumps
 from webhooks.slack import build_passed, build_failed
 from background_task import background
+from traceback import format_tb
+from sys import exc_info
 
 def install(repo):
     call(['mkdir', '-p', '.repos'])
@@ -87,6 +89,9 @@ def __run_cmd(command):
     except CalledProcessError as e:
         status = e.returncode
         output = e.output
+    except Exception:
+        status = 999
+        output = __get_traceback(exc_info())
 
     return { 'status': status, 'output': output, 'command': command }
 
@@ -107,3 +112,8 @@ def __get_pipeline(repo, branch):
 def __update_status(build, status):
     build.status = status
     build.save()
+
+def __get_traceback(dm):
+    e_type, e, tb = dm
+    return traceback.format_tb(tb).join('\n')
+
