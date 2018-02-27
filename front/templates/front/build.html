@@ -7,7 +7,23 @@
     <li class="list-group-item"><b>Branch: </b> {{ build.branch }}</li>
     <li class="list-group-item"><b>Commiter: </b> {{ build.committer }}</li>
     <li class="list-group-item"><b>Status: </b> {{ build.status }}</li>
-    <li class="list-group-item"><b>Repo: </b> {{ build.log }}</li>
+    <li class="list-group-item">
+      {% for stage in build.get_log %}
+        <div>
+          <strong>{{stage.stage}}</strong>
+          <br />
+          <ol>
+            {% for cmd in stage.log %}
+              <li>
+                {{cmd.command}}
+                <br/ >
+                {{cmd.output}}
+              </li>
+            {% endfor %}
+          </ol>
+        </div>
+      {% endfor %}
+     </li>
   </ul>
 
   <p><a href="{% url 'front:repo_builds' build.repo.id %}">Back to repo</a></p>

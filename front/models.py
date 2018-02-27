@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
+from json import loads
 from .utils import yaml_load
 
 @python_2_unicode_compatible
@@ -43,6 +44,10 @@ class Build(models.Model):
 
     def __str__(self):
         return "[%s] %s/%s : %s" % (self.committer, self.repo.name, self.branch, self.status)
+
+    def get_log(self):
+        print(self.log)
+        return loads(self.log)
 
 @python_2_unicode_compatible
 class Pipeline(models.Model):
