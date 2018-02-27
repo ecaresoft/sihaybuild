@@ -12,4 +12,6 @@ urlpatterns = [
     url(r'^builds/(?P<pk>[0-9]+)/$', views.BuildView.as_view(), name='build'),
     # /repository/:id/builds
     url(r'^repos/(?P<pk>[0-9]+)/builds/$', views.RepoBuildsView.as_view(), name='repo_builds'),
+    # /
+    url(r'', views.index, name='index')
 ]
