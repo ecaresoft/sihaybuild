@@ -46,7 +46,7 @@ def build_failed(build, command):
 
     message = [
         {
-            'fallback': "Build passed on %s/%s by %s" % (repo, branch, committer),
+            'fallback': "Build failed on %s/%s by %s" % (repo, branch, committer),
             'pretext': 'Build Failed',
             'author_name': committer,
             'author_icon': "https://avatars.githubusercontent.com/%s" % committer,
